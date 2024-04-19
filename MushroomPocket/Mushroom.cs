@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace MushroomPocket
 {
     public abstract class Character
@@ -18,39 +21,45 @@ namespace MushroomPocket
 
     public class Waluigi : Character
     {
-        public Waluigi() : base("Waluigi", 100, 0, "Speed") { }
+        public Waluigi(string name, int hp, int exp) : base(name, hp, exp, "Agility") { }
     }
 
     public class Daisy : Character
     {
-        public Daisy() : base("Daisy", 100, 0, "Leadership") { }
+        public Daisy(string name, int hp, int exp) : base(name, hp, exp, "Leadership") { }
     }
 
     public class Wario : Character
     {
-        public Wario() : base("Wario", 100, 0, "Strength") { }
+        public Wario(string name, int hp, int exp) : base(name, hp, exp, "Strength") { }
     }
 
-    public class MushroomMaster : Character
+    public class Luigi : Character
     {
+        public Luigi(string name, int hp, int exp) : base(name, hp, exp, "Precision and Accuracy") { }
+    }
+
+    public class Peach : Character
+    {
+        public Peach(string name, int hp, int exp) : base(name, hp, exp, "Magic Abilities") { }
+    }
+
+    public class Mario : Character
+    {
+        public Mario(string name, int hp, int exp) : base(name, hp, exp, "Combat Skills") { }
+    }
+
+    public class MushroomMaster
+    {
+        public string Name { get; set; }
         public int NoToTransform { get; set; }
         public string TransformTo { get; set; }
 
-        public MushroomMaster(string name, int hp, int exp, string skill, int noToTransform, string transformTo)
-            : base(name, hp, exp, skill)
+        public MushroomMaster(string name, int noToTransform, string transformTo)
         {
-            NoToTransform = noToTransform;
-            TransformTo = transformTo;
+            this.Name = name;
+            this.NoToTransform = noToTransform;
+            this.TransformTo = transformTo;
         }
     }
 }
-
-
-
-
-
-
-
-
-
-

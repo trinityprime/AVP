@@ -1,24 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MushroomPocket
 {
-
     class Program
     {
-        static void Main(string[] args)
-        {
-            //MushroomMaster criteria list for checking character transformation availability.   
-            /*************************************************************************
-                PLEASE DO NOT CHANGE THE CODES FROM LINE 15-19
-            *************************************************************************/
-            List<MushroomMaster> mushroomMasters = new List<MushroomMaster>(){
+        static List<Character> pocket = new List<Character>();
+        static List<MushroomMaster> mushroomMasters = new List<MushroomMaster>(){
             new MushroomMaster("Daisy", 2, "Peach"),
             new MushroomMaster("Wario", 3, "Mario"),
             new MushroomMaster("Waluigi", 1, "Luigi")
-            };
+        };
 
-
+        static void Main(string[] args)
+        {
             Console.WriteLine("*******************************");
             Console.WriteLine("Welcome to Mushroom Pocket App");
             Console.WriteLine("*******************************");
@@ -57,78 +53,84 @@ namespace MushroomPocket
             }
         }
 
-        List<Character> mushroomPocket = new List<Character>();
-
         static void AddCharacter()
         {
-            Console.WriteLine("Please enter the name of the character: ");
+            Console.WriteLine("Enter character name:");
             string name = Console.ReadLine();
-            Character character_created = null;
+            Console.WriteLine("Enter character HP:");
+            int hp = int.Parse(Console.ReadLine());
+            Console.WriteLine("Enter character EXP:");
+            int exp = int.Parse(Console.ReadLine());
 
-            switch (name)
+            switch (name.ToLower())
             {
-                case "Waluigi":
-                    character_created = new Waluigi();
+                case "waluigi":
+                    pocket.Add(new Waluigi(name, hp, exp));
                     break;
-                case "Daisy":
-                    character_created = new Daisy();
+                case "daisy":
+                    pocket.Add(new Daisy(name, hp, exp));
                     break;
-                case "Wario":
-                    character_created = new Wario();
+                case "wario":
+                    pocket.Add(new Wario(name, hp, exp));
                     break;
                 default:
-                    Console.WriteLine("Invalid character name. Please enter Waluigi, Daisy, or Wario.");
-                    return;
+                    Console.WriteLine("Invalid character name. Only Waluigi, Daisy, and Wario are allowed.\n");
+                    break;
             }
-
-            Console.WriteLine($"Please enter the HP of {name}: ");
-
         }
 
         static void ListCharacter()
         {
-            Console.WriteLine("Characters in your pocket:");
-            foreach (MushroomMaster mushroomMaster in mushroomPocket)
+            foreach (var character in pocket)
             {
-                Console.WriteLine($"Name: {mushroomMaster.Name}, HP: {mushroomMaster.HP}, EXP: {mushroomMaster.EXP}");
+                Console.WriteLine($"Name: {character.Name}\nHP: {character.HP}\nEXP: {character.EXP}\nSkill: {character.Skill}");
+                Console.WriteLine("---------------------");
             }
         }
 
         static void CheckTransformation()
         {
-            Console.WriteLine("Enter the name of the character you want to check for transformation: ");
-            string name = Console.ReadLine();
+            bool canTransform = false;
+            foreach (var master in mushroomMasters)
+            {
+                int count = pocket.Count(c => c.Name == master.Name);
 
-            MushroomMaster mushroomMaster = mushroomPocket.Find(m => m.Name == name);
-            if (mushroomMaster != null)
-            {
-                Console.WriteLine($"Character {name} can transform into {mushroomMaster.Transformation}");
+                if (count >= master.NoToTransform)
+                {
+                    Console.WriteLine($"{master.Name} can be transformed to {master.TransformTo}\n");
+                    canTransform = true;
+                }
             }
-            else
+
+            if (canTransform == false)
             {
-                Console.WriteLine($"Character {name} not found in your pocket.");
+                Console.WriteLine("No characters can be transformed.\n");
             }
         }
 
         static void Transformation()
         {
-            Console.WriteLine("Enter the name of the character you want to transform: ");
-            string name = Console.ReadLine();
-
-            MushroomMaster mushroomMaster = mushroomMasters.Find(m => m.Name == name);
-            if (mushroomMaster != null)
+            foreach (var master in mushroomMasters)
             {
-                Console.WriteLine($"Transforming {name} into {mushroomMaster.Transformation}...");
-                mushroomMaster.Transform();
-                Console.WriteLine($"Transformation complete! {name} is now {mushroomMaster.Transformation}");
-            }
-            else
-            {
-                Console.WriteLine($"Character {name} not found in your pocket.");
+                int count = pocket.Count(c => c.Name == master.Name);
+                if (count >= master.NoToTransform)
+                {
+                    pocket.RemoveAll(c => c.Name == master.Name);
+                    switch (master.TransformTo)
+                    {
+                        case "Peach":
+                            pocket.Add(new Peach(master.TransformTo, 100, 0));
+                            break;
+                        case "Mario":
+                            pocket.Add(new Mario(master.TransformTo, 100, 0));
+                            break;
+                        case "Luigi":
+                            pocket.Add(new Luigi(master.TransformTo, 100, 0));
+                            break;
+                    }
+                    Console.WriteLine($"{master.Name} --> {master.TransformTo}!\n");
+                }
             }
         }
     }
 }
-
-
-

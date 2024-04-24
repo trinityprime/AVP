@@ -1,13 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "DWzNMgbo4Snu2SuH0x5MtVkk030sorIPm5Tvr/LLRipQ+hPuItuNQhwbo09PJ4k7cS+Q0+Y9vsoMMJSjII37xw==",
+  "dgSpecHash": "gPmieicr1jTwiBtLaPmWEpRe8RuZpisxjI8G2sKyOquBhkQO/DyA0ZvcKO6A9R2rN7Hso49iHN+3rQvEyYzoUQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\ryanx\\OneDrive\\Documents\\GitHub\\AVP\\MushroomPocket\\MushroomPocket.csproj",
+  "projectFilePath": "C:\\Users\\ryanx\\AVP\\AVP\\MushroomPocket\\MushroomPocket.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\ryanx\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.14\\microsoft.netcore.app.ref.7.0.14.nupkg.sha512",
-    "C:\\Users\\ryanx\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.14\\microsoft.windowsdesktop.app.ref.7.0.14.nupkg.sha512",
-    "C:\\Users\\ryanx\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.14\\microsoft.aspnetcore.app.ref.7.0.14.nupkg.sha512",
-    "C:\\Users\\ryanx\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\7.0.14\\microsoft.netcore.app.host.win-x64.7.0.14.nupkg.sha512"
+    "C:\\Users\\ryanx\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.18\\microsoft.netcore.app.ref.7.0.18.nupkg.sha512",
+    "C:\\Users\\ryanx\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.18\\microsoft.windowsdesktop.app.ref.7.0.18.nupkg.sha512",
+    "C:\\Users\\ryanx\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.18\\microsoft.aspnetcore.app.ref.7.0.18.nupkg.sha512",
+    "C:\\Users\\ryanx\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\7.0.18\\microsoft.netcore.app.host.win-x64.7.0.18.nupkg.sha512"
   ],
   "logs": []
 }

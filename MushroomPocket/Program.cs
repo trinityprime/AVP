@@ -91,13 +91,13 @@ namespace MushroomPocket
         static void CheckTransformation()
         {
             bool canTransform = false;
-            foreach (var master in mushroomMasters)
+            foreach (var character in mushroomMasters)
             {
-                int count = pocket.Count(c => c.Name == master.Name);
+                int count = pocket.Count(c => c.Name == character.Name);
 
-                if (count >= master.NoToTransform)
+                if (count >= character.NoToTransform)
                 {
-                    Console.WriteLine($"{master.Name} can be transformed to {master.TransformTo}\n");
+                    Console.WriteLine($"{character.Name} can be transformed to {character.TransformTo}\n");
                     canTransform = true;
                 }
             }
@@ -110,25 +110,25 @@ namespace MushroomPocket
 
         static void Transformation()
         {
-            foreach (var master in mushroomMasters)
+            foreach (var character in mushroomMasters)
             {
-                int count = pocket.Count(c => c.Name == master.Name);
-                if (count >= master.NoToTransform)
+                int count = pocket.Count(c => c.Name == character.Name);
+                if (count >= character.NoToTransform)
                 {
-                    pocket.RemoveAll(c => c.Name == master.Name);
-                    switch (master.TransformTo)
+                    pocket.RemoveAll(c => c.Name == character.Name);
+                    switch (character.TransformTo.ToLower())
                     {
-                        case "Peach":
-                            pocket.Add(new Peach(master.TransformTo, 100, 0));
+                        case "peach":
+                            pocket.Add(new Peach(character.TransformTo, 100, 0));
                             break;
-                        case "Mario":
-                            pocket.Add(new Mario(master.TransformTo, 100, 0));
+                        case "mario":
+                            pocket.Add(new Mario(character.TransformTo, 100, 0));
                             break;
-                        case "Luigi":
-                            pocket.Add(new Luigi(master.TransformTo, 100, 0));
+                        case "luigi":
+                            pocket.Add(new Luigi(character.TransformTo, 100, 0));
                             break;
                     }
-                    Console.WriteLine($"{master.Name} --> {master.TransformTo}!\n");
+                    Console.WriteLine($"{character.Name} --> {character.TransformTo}!\n");
                 }
             }
         }

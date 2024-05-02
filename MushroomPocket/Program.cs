@@ -25,6 +25,7 @@ namespace MushroomPocket
                 Console.WriteLine("(2). List character(s) in my pocket");
                 Console.WriteLine("(3). Check if I can transform my characters");
                 Console.WriteLine("(4). Transform character(s)");
+                Console.WriteLine("(5). Train character(s)");
                 Console.WriteLine("Please only enter [1,2,3,4] or Q to quit: ");
                 string input = Console.ReadLine();
 
@@ -41,6 +42,9 @@ namespace MushroomPocket
                         break;
                     case "4":
                         Transformation();
+                        break;
+                    case "5":
+                        TrainCharacter();
                         break;
                     case "Q":
                     case "q":
@@ -88,6 +92,25 @@ namespace MushroomPocket
                 Console.WriteLine($"Name: {character.Name}\nHP: {character.HP}\nEXP: {character.EXP}\nSkill: {character.Skill}");
                 Console.WriteLine("---------------------");
                 Console.WriteLine("---------------------");
+            }
+        }
+
+        static void TrainCharacter()
+        {
+            Console.WriteLine("Enter the name of the character you want to train:");
+            string name = Console.ReadLine();
+
+            var character = pocket.FirstOrDefault(c => c.Name.ToLower() == name.ToLower());
+            if (character != null)
+            {
+                int currentHP = character.HP;
+                character.HP += 50;
+                int updatedHP = character.HP;
+                Console.WriteLine($"{character.Name} HP: {currentHP} --> {updatedHP}.\n");
+            }
+            else
+            {
+                Console.WriteLine("Character not found in pocket.\n");
             }
         }
 

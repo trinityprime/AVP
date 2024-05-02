@@ -81,9 +81,12 @@ namespace MushroomPocket
 
         static void ListCharacter()
         {
-            foreach (var character in pocket)
+            var sortedHP = pocket.OrderByDescending(c => c.HP);
+
+            foreach (var character in sortedHP)
             {
                 Console.WriteLine($"Name: {character.Name}\nHP: {character.HP}\nEXP: {character.EXP}\nSkill: {character.Skill}");
+                Console.WriteLine("---------------------");
                 Console.WriteLine("---------------------");
             }
         }
@@ -93,7 +96,7 @@ namespace MushroomPocket
             bool canTransform = false;
             foreach (var character in mushroomMasters)
             {
-                int count = pocket.Count(c => c.Name == character.Name);
+                int count = pocket.Count(c => c.Name.ToLower() == character.Name.ToLower());
 
                 if (count >= character.NoToTransform)
                 {
@@ -112,10 +115,10 @@ namespace MushroomPocket
         {
             foreach (var character in mushroomMasters)
             {
-                int count = pocket.Count(c => c.Name == character.Name);
+                int count = pocket.Count(c => c.Name.ToLower() == character.Name.ToLower());
                 if (count >= character.NoToTransform)
                 {
-                    pocket.RemoveAll(c => c.Name == character.Name);
+                    pocket.RemoveAll(c => c.Name.ToLower() == character.Name.ToLower());
                     switch (character.TransformTo.ToLower())
                     {
                         case "peach":

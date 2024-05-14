@@ -23,10 +23,12 @@ namespace MushroomPocket
             {
                 Console.WriteLine("(1). Add Mushroom's Character to my pocket");
                 Console.WriteLine("(2). List character(s) in my pocket");
-                Console.WriteLine("(3). Check if I can transform my characters");
-                Console.WriteLine("(4). Transform character(s)");
-                Console.WriteLine("(5). Train character(s)");
-                Console.WriteLine("Please only enter [1,2,3,4] or Q to quit: ");
+                Console.WriteLine("(3). Update Mushroom Character's HP & XP");
+                Console.WriteLine("(4). Delete Mushroom Character from my pocket");
+                Console.WriteLine("(5). Check if I can transform my characters");
+                Console.WriteLine("(6). Transform character(s)");
+                Console.WriteLine("(7). Train character(s)");
+                Console.WriteLine("Please only enter [1,2,3,4,5,6,7] or Q to quit: ");
                 string input = Console.ReadLine();
 
                 switch (input)
@@ -38,12 +40,18 @@ namespace MushroomPocket
                         ListCharacter();
                         break;
                     case "3":
-                        CheckTransformation();
+                        UpdateCharacter();
                         break;
                     case "4":
-                        Transformation();
+                        DeleteCharacter();
                         break;
                     case "5":
+                        CheckTransformation();
+                        break;
+                    case "6":
+                        Transformation();
+                        break;
+                    case "7":
                         TrainCharacter();
                         break;
                     case "Q":
@@ -51,7 +59,7 @@ namespace MushroomPocket
                         Environment.Exit(0);
                         break;
                     default:
-                        Console.WriteLine("Invalid input. Please enter a number between 1 and 4, or Q to quit.");
+                        Console.WriteLine("Invalid input. Please enter a number between 1 and 7, or Q to quit.");
                         break;
                 }
             }
@@ -89,7 +97,7 @@ namespace MushroomPocket
 
             foreach (var character in sortedHP)
             {
-                Console.WriteLine($"Name: {character.Name}\nHP: {character.HP}\nEXP: {character.EXP}\nSkill: {character.Skill}");
+                Console.WriteLine($"ID: {character.ID} Name: {character.Name}\nHP: {character.HP}\nEXP: {character.EXP}\nSkill: {character.Skill}");
                 Console.WriteLine("---------------------");
                 Console.WriteLine("---------------------");
             }
@@ -97,10 +105,10 @@ namespace MushroomPocket
 
         static void TrainCharacter()
         {
-            Console.WriteLine("Enter the name of the character you want to train:");
-            string name = Console.ReadLine();
+            Console.WriteLine("Enter the name of the ID of the character you want to train:");
+            int ID = int.Parse(Console.ReadLine());
 
-            var character = pocket.FirstOrDefault(c => c.Name.ToLower() == name.ToLower());
+            var character = pocket.FirstOrDefault(c => c.ID == ID);
             if (character != null)
             {
                 int currentHP = character.HP;
@@ -113,6 +121,49 @@ namespace MushroomPocket
                 Console.WriteLine("Character not found in pocket.\n");
             }
         }
+
+        static void UpdateCharacter()
+        {
+            Console.WriteLine("Enter the ID of the character you want to update: ");
+            int ID = int.Parse(Console.ReadLine());
+
+            var character = pocket.FirstOrDefault(c => c.ID == ID);
+            if (character != null)
+            {
+                Console.WriteLine("Enter new HP:");
+                int newHP = int.Parse(Console.ReadLine());
+                Console.WriteLine("Enter new EXP:");
+                int newEXP = int.Parse(Console.ReadLine());
+
+                character.HP = newHP;
+                character.EXP = newEXP;
+
+                Console.WriteLine($"{character.Name} has been updated.\n");
+            }
+            else
+            {
+                Console.WriteLine("Character not found in pocket.\n");
+            }
+        }
+
+
+        static void DeleteCharacter()
+        {
+            Console.WriteLine("Enter the ID of the character you want to delete: ");
+            int ID = int.Parse(Console.ReadLine());
+
+            var character = pocket.FirstOrDefault(c => c.ID == ID);
+            if (character != null)
+            {
+                pocket.Remove(character);
+                Console.WriteLine($"{character.Name} has been removed from your pocket.\n");
+            }
+            else
+            {
+                Console.WriteLine("Character not found in pocket.\n");
+            }
+        }
+
 
         static void CheckTransformation()
         {

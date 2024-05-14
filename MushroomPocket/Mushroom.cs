@@ -5,6 +5,9 @@ namespace MushroomPocket
 {
     public abstract class Character
     {
+        private static int nextId = 1;
+
+        public int ID { get; private set; }
         public string Name { get; set; }
         public int HP { get; set; }
         public int EXP { get; set; }
@@ -12,6 +15,7 @@ namespace MushroomPocket
 
         protected Character(string name, int hp, int exp, string skill)
         {
+            ID = nextId++;
             Name = name;
             HP = hp;
             EXP = exp;
@@ -48,18 +52,18 @@ namespace MushroomPocket
     {
         public Mario(string name, int hp, int exp) : base(name, hp, exp, "Combat Skills") { }
     }
+}
 
-    public class MushroomMaster
+public class MushroomMaster
+{
+    public string Name { get; set; }
+    public int NoToTransform { get; set; }
+    public string TransformTo { get; set; }
+
+    public MushroomMaster(string name, int noToTransform, string transformTo)
     {
-        public string Name { get; set; }
-        public int NoToTransform { get; set; }
-        public string TransformTo { get; set; }
-
-        public MushroomMaster(string name, int noToTransform, string transformTo)
-        {
-            this.Name = name;
-            this.NoToTransform = noToTransform;
-            this.TransformTo = transformTo;
-        }
+        this.Name = name;
+        this.NoToTransform = noToTransform;
+        this.TransformTo = transformTo;
     }
 }

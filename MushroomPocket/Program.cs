@@ -30,6 +30,7 @@ namespace MushroomPocket
                 Console.WriteLine("(7). Train character(s)");
                 Console.WriteLine("Please only enter [1,2,3,4,5,6,7] or Q to quit: ");
                 string input = Console.ReadLine();
+                  Console.WriteLine("---------------------");
 
                 switch (input)
                 {
@@ -97,8 +98,7 @@ namespace MushroomPocket
 
             foreach (var character in sortedHP)
             {
-                Console.WriteLine($"ID: {character.ID} Name: {character.Name}\nHP: {character.HP}\nEXP: {character.EXP}\nSkill: {character.Skill}");
-                Console.WriteLine("---------------------");
+                Console.WriteLine($"ID: {character.ID}\nName: {character.Name}\nHP: {character.HP}\nEXP: {character.EXP}\nSkill: {character.Skill}");
                 Console.WriteLine("---------------------");
             }
         }

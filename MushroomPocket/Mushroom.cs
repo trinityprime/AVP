@@ -5,8 +5,6 @@ namespace MushroomPocket
 {
     public abstract class Character
     {
-        public int nextId = 1;
-
         public int ID { get; set; }
         public string Name { get; set; }
         public int HP { get; set; }
@@ -16,7 +14,6 @@ namespace MushroomPocket
         public Character() { }
         public Character(string name, int hp, int exp, string skill)
         {
-            ID = nextId++;
             Name = name;
             HP = hp;
             EXP = exp;

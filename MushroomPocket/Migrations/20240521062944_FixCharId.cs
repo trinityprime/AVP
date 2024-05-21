@@ -5,7 +5,7 @@
 namespace MushroomPocket.Migrations
 {
     /// <inheritdoc />
-    public partial class MushroomDb : Migration
+    public partial class FixCharId : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

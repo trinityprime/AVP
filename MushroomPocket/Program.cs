@@ -30,7 +30,7 @@ namespace MushroomPocket
                 Console.WriteLine("(7). Train character(s)");
                 Console.WriteLine("Please only enter [1,2,3,4,5,6,7] or Q to quit: ");
                 string input = Console.ReadLine();
-                  Console.WriteLine("---------------------");
+                Console.WriteLine("---------------------");
 
                 switch (input)
                 {
@@ -65,7 +65,6 @@ namespace MushroomPocket
                 }
             }
         }
-
         static void AddCharacter()
         {
             Console.WriteLine("Enter character name:");
@@ -75,34 +74,43 @@ namespace MushroomPocket
             Console.WriteLine("Enter character EXP:");
             int exp = int.Parse(Console.ReadLine());
 
-            switch (name.ToLower())
+            using (var context = new MushroomDatabase())
             {
-                case "waluigi":
-                    pocket.Add(new Waluigi(name, hp, exp));
-                    break;
-                case "daisy":
-                    pocket.Add(new Daisy(name, hp, exp));
-                    break;
-                case "wario":
-                    pocket.Add(new Wario(name, hp, exp));
-                    break;
-                default:
-                    Console.WriteLine("Invalid character name. Only Waluigi, Daisy, and Wario are allowed.\n");
-                    break;
-            }
-        }
+                switch (name.ToLower())
+                {
+                    case "waluigi":
+                        context.Characters.Add(new Waluigi(name, hp, exp));
+                        break;
+                    case "daisy":
+                        context.Characters.Add(new Daisy(name, hp, exp));
+                        break;
+                    case "wario":
+                        context.Characters.Add(new Wario(name, hp, exp));
+                        break;
+                    default:
+                        Console.WriteLine("Invalid character name. Only Waluigi, Daisy, and Wario are allowed.\n");
+                        return;
+                }
 
+                context.SaveChanges();
+            }
+
+            Console.WriteLine("Character added successfully!");
+        }
         static void ListCharacter()
         {
-            var sortedHP = pocket.OrderByDescending(c => c.HP);
-
-            foreach (var character in sortedHP)
+            using (var context = new MushroomDatabase())
             {
-                Console.WriteLine($"ID: {character.ID}\nName: {character.Name}\nHP: {character.HP}\nEXP: {character.EXP}\nSkill: {character.Skill}");
-                Console.WriteLine("---------------------");
+                var sortedHP = context.Characters.OrderByDescending(c => c.HP);
+
+                foreach (var character in sortedHP)
+                {
+                    Console.WriteLine($"ID: {character.ID}\nName: {character.Name}\nHP: {character.HP}\nEXP: {character.EXP}\nSkill: {character.Skill}");
+                    Console.WriteLine("---------------------");
+                }
             }
         }
-
+        
         static void TrainCharacter()
         {
             Console.WriteLine("Enter the name of the ID of the character you want to train:");

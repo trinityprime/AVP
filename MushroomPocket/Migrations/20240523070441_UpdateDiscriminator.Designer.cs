@@ -10,8 +10,8 @@ using MushroomPocket.EntityFrameworkCore;
 namespace MushroomPocket.Migrations
 {
     [DbContext(typeof(MushroomDatabase))]
-    [Migration("20240521062944_FixCharId")]
-    partial class FixCharId
+    [Migration("20240523070441_UpdateDiscriminator")]
+    partial class UpdateDiscriminator
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,7 +45,7 @@ namespace MushroomPocket.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Discriminator")
+                    b.Property<string>("CharacterType")
                         .IsRequired()
                         .HasMaxLength(13)
                         .HasColumnType("TEXT");
@@ -66,9 +66,16 @@ namespace MushroomPocket.Migrations
 
                     b.ToTable("Characters");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Character");
+                    b.HasDiscriminator<string>("CharacterType").HasValue("Character");
 
                     b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("MushroomPocket.Daisy", b =>
+                {
+                    b.HasBaseType("MushroomPocket.Character");
+
+                    b.HasDiscriminator().HasValue("Daisy");
                 });
 
             modelBuilder.Entity("MushroomPocket.Luigi", b =>
@@ -90,6 +97,13 @@ namespace MushroomPocket.Migrations
                     b.HasBaseType("MushroomPocket.Character");
 
                     b.HasDiscriminator().HasValue("Peach");
+                });
+
+            modelBuilder.Entity("MushroomPocket.Waluigi", b =>
+                {
+                    b.HasBaseType("MushroomPocket.Character");
+
+                    b.HasDiscriminator().HasValue("Waluigi");
                 });
 
             modelBuilder.Entity("MushroomPocket.Wario", b =>

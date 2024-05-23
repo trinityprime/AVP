@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MushroomPocket;
+using MushroomPocket.EntityFrameworkCore;
 
 #nullable disable
 
@@ -42,7 +42,7 @@ namespace MushroomPocket.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Discriminator")
+                    b.Property<string>("CharacterType")
                         .IsRequired()
                         .HasMaxLength(13)
                         .HasColumnType("TEXT");
@@ -63,9 +63,16 @@ namespace MushroomPocket.Migrations
 
                     b.ToTable("Characters");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Character");
+                    b.HasDiscriminator<string>("CharacterType").HasValue("Character");
 
                     b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("MushroomPocket.Daisy", b =>
+                {
+                    b.HasBaseType("MushroomPocket.Character");
+
+                    b.HasDiscriminator().HasValue("Daisy");
                 });
 
             modelBuilder.Entity("MushroomPocket.Luigi", b =>
@@ -87,6 +94,13 @@ namespace MushroomPocket.Migrations
                     b.HasBaseType("MushroomPocket.Character");
 
                     b.HasDiscriminator().HasValue("Peach");
+                });
+
+            modelBuilder.Entity("MushroomPocket.Waluigi", b =>
+                {
+                    b.HasBaseType("MushroomPocket.Character");
+
+                    b.HasDiscriminator().HasValue("Waluigi");
                 });
 
             modelBuilder.Entity("MushroomPocket.Wario", b =>

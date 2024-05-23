@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MushroomPocket.EntityFrameworkCore;
 
 namespace MushroomPocket
 {
@@ -19,52 +20,56 @@ namespace MushroomPocket
             Console.WriteLine("Welcome to Mushroom Pocket App");
             Console.WriteLine("*******************************");
 
-            while (true)
+            using (var context = new MushroomDatabase())
             {
-                Console.WriteLine("(1). Add Mushroom's Character to my pocket");
-                Console.WriteLine("(2). List character(s) in my pocket");
-                Console.WriteLine("(3). Update Mushroom Character's HP & XP");
-                Console.WriteLine("(4). Delete Mushroom Character from my pocket");
-                Console.WriteLine("(5). Check if I can transform my characters");
-                Console.WriteLine("(6). Transform character(s)");
-                Console.WriteLine("(7). Train character(s)");
-                Console.WriteLine("Please only enter [1,2,3,4,5,6,7] or Q to quit: ");
-                string input = Console.ReadLine();
-                Console.WriteLine("---------------------");
-
-                switch (input)
+                while (true)
                 {
-                    case "1":
-                        AddCharacter();
-                        break;
-                    case "2":
-                        ListCharacter();
-                        break;
-                    case "3":
-                        UpdateCharacter();
-                        break;
-                    case "4":
-                        DeleteCharacter();
-                        break;
-                    case "5":
-                        CheckTransformation();
-                        break;
-                    case "6":
-                        Transformation();
-                        break;
-                    case "7":
-                        TrainCharacter();
-                        break;
-                    case "Q":
-                    case "q":
-                        Environment.Exit(0);
-                        break;
-                    default:
-                        Console.WriteLine("Invalid input. Please enter a number between 1 and 7, or Q to quit.");
-                        break;
+                    Console.WriteLine("(1). Add Mushroom's Character to my pocket");
+                    Console.WriteLine("(2). List character(s) in my pocket");
+                    Console.WriteLine("(3). Update Mushroom Character's HP & XP");
+                    Console.WriteLine("(4). Delete Mushroom Character from my pocket");
+                    Console.WriteLine("(5). Check if I can transform my characters");
+                    Console.WriteLine("(6). Transform character(s)");
+                    Console.WriteLine("(7). Train character(s)");
+                    Console.WriteLine("Please only enter [1,2,3,4,5,6,7] or Q to quit: ");
+                    string input = Console.ReadLine();
+                    Console.WriteLine("---------------------");
+
+                    switch (input)
+                    {
+                        case "1":
+                            AddCharacter();
+                            break;
+                        case "2":
+                            ListCharacter();
+                            break;
+                        case "3":
+                            UpdateCharacter();
+                            break;
+                        case "4":
+                            DeleteCharacter();
+                            break;
+                        case "5":
+                            CheckTransformation();
+                            break;
+                        case "6":
+                            Transformation();
+                            break;
+                        case "7":
+                            TrainCharacter();
+                            break;
+                        case "Q":
+                        case "q":
+                            Environment.Exit(0);
+                            break;
+                        default:
+                            Console.WriteLine("Invalid input. Please enter a number between 1 and 7, or Q to quit.");
+                            break;
+                    }
                 }
             }
         }
+
         static void AddCharacter()
         {
             Console.WriteLine("Enter character name:");
@@ -88,45 +93,49 @@ namespace MushroomPocket
                         context.Characters.Add(new Wario(name, hp, exp));
                         break;
                     default:
-                        Console.WriteLine("Invalid character name. Only Waluigi, Daisy, and Wario are allowed.\n");
+                        Console.WriteLine("Invalid character name. Only Waluigi, Daisy, Wario are prohibited.\n");
                         return;
                 }
 
                 context.SaveChanges();
+                Console.WriteLine("Character added successfully!");
             }
-
-            Console.WriteLine("Character added successfully!");
         }
+
+
         static void ListCharacter()
         {
             using (var context = new MushroomDatabase())
             {
-                var sortedHP = context.Characters.OrderByDescending(c => c.HP);
-
-                foreach (var character in sortedHP)
+                var sortedCharacters = context.Characters.OrderByDescending(c => c.HP).ToList();
+                foreach (var character in sortedCharacters)
                 {
                     Console.WriteLine($"ID: {character.ID}\nName: {character.Name}\nHP: {character.HP}\nEXP: {character.EXP}\nSkill: {character.Skill}");
                     Console.WriteLine("---------------------");
                 }
             }
         }
-        
+
         static void TrainCharacter()
         {
             Console.WriteLine("Enter the name of the ID of the character you want to train:");
             int ID = int.Parse(Console.ReadLine());
 
-            var character = pocket.FirstOrDefault(c => c.ID == ID);
-            if (character != null)
+            using (var context = new MushroomDatabase())
             {
-                int currentHP = character.HP;
-                character.HP += 50;
-                int updatedHP = character.HP;
-                Console.WriteLine($"{character.Name} HP: {currentHP} --> {updatedHP}.\n");
-            }
-            else
-            {
-                Console.WriteLine("Character not found in pocket.\n");
+                var character = context.Characters.FirstOrDefault(c => c.ID == ID);
+                if (character != null)
+                {
+                    int currentHP = character.HP;
+                    character.HP += 50;
+                    int updatedHP = character.HP;
+                    Console.WriteLine($"{character.Name} HP: {currentHP} --> {updatedHP}.\n");
+                    context.SaveChanges();
+                }
+                else
+                {
+                    Console.WriteLine("Character not found in pocket.\n");
+                }
             }
         }
 
@@ -135,22 +144,26 @@ namespace MushroomPocket
             Console.WriteLine("Enter the ID of the character you want to update: ");
             int ID = int.Parse(Console.ReadLine());
 
-            var character = pocket.FirstOrDefault(c => c.ID == ID);
-            if (character != null)
+            using (var context = new MushroomDatabase())
             {
-                Console.WriteLine("Enter new HP:");
-                int newHP = int.Parse(Console.ReadLine());
-                Console.WriteLine("Enter new EXP:");
-                int newEXP = int.Parse(Console.ReadLine());
+                var character = context.Characters.FirstOrDefault(c => c.ID == ID);
+                if (character != null)
+                {
+                    Console.WriteLine("Enter new HP:");
+                    int newHP = int.Parse(Console.ReadLine());
+                    Console.WriteLine("Enter new EXP:");
+                    int newEXP = int.Parse(Console.ReadLine());
 
-                character.HP = newHP;
-                character.EXP = newEXP;
+                    character.HP = newHP;
+                    character.EXP = newEXP;
 
-                Console.WriteLine($"{character.Name} has been updated.\n");
-            }
-            else
-            {
-                Console.WriteLine("Character not found in pocket.\n");
+                    Console.WriteLine($"{character.Name} has been updated.\n");
+                    context.SaveChanges();
+                }
+                else
+                {
+                    Console.WriteLine("Character not found in pocket.\n");
+                }
             }
         }
 
@@ -160,15 +173,19 @@ namespace MushroomPocket
             Console.WriteLine("Enter the ID of the character you want to delete: ");
             int ID = int.Parse(Console.ReadLine());
 
-            var character = pocket.FirstOrDefault(c => c.ID == ID);
-            if (character != null)
+            using (var context = new MushroomDatabase())
             {
-                pocket.Remove(character);
-                Console.WriteLine($"{character.Name} has been removed from your pocket.\n");
-            }
-            else
-            {
-                Console.WriteLine("Character not found in pocket.\n");
+                var character = context.Characters.FirstOrDefault(c => c.ID == ID);
+                if (character != null)
+                {
+                    context.Characters.Remove(character);
+                    Console.WriteLine($"{character.Name} has been removed from your pocket.\n");
+                    context.SaveChanges();
+                }
+                else
+                {
+                    Console.WriteLine("Character not found in pocket.\n");
+                }
             }
         }
 
@@ -176,14 +193,17 @@ namespace MushroomPocket
         static void CheckTransformation()
         {
             bool canTransform = false;
-            foreach (var character in mushroomMasters)
+            using (var context = new MushroomDatabase())
             {
-                int count = pocket.Count(c => c.Name.ToLower() == character.Name.ToLower());
-
-                if (count >= character.NoToTransform)
+                foreach (var character in mushroomMasters)
                 {
-                    Console.WriteLine($"{character.Name} can be transformed to {character.TransformTo}\n");
-                    canTransform = true;
+                    int count = context.Characters.Count(c => c.Name.ToLower() == character.Name.ToLower());
+
+                    if (count >= character.NoToTransform)
+                    {
+                        Console.WriteLine($"{character.Name} can be transformed to {character.TransformTo}\n");
+                        canTransform = true;
+                    }
                 }
             }
 
@@ -195,25 +215,34 @@ namespace MushroomPocket
 
         static void Transformation()
         {
-            foreach (var character in mushroomMasters)
+            using (var context = new MushroomDatabase())
             {
-                int count = pocket.Count(c => c.Name.ToLower() == character.Name.ToLower());
-                if (count >= character.NoToTransform)
+                foreach (var character in mushroomMasters)
                 {
-                    pocket.RemoveAll(c => c.Name.ToLower() == character.Name.ToLower());
-                    switch (character.TransformTo.ToLower())
+                    int count = context.Characters.Count(c => c.Name.ToLower() == character.Name.ToLower());
+                    if (count >= character.NoToTransform)
                     {
-                        case "peach":
-                            pocket.Add(new Peach(character.TransformTo, 100, 0));
-                            break;
-                        case "mario":
-                            pocket.Add(new Mario(character.TransformTo, 100, 0));
-                            break;
-                        case "luigi":
-                            pocket.Add(new Luigi(character.TransformTo, 100, 0));
-                            break;
+                        var charactersToTransform = context.Characters.Where(c => c.Name.ToLower() == character.Name.ToLower()).ToList();
+                        foreach (var c in charactersToTransform)
+                        {
+                            context.Characters.Remove(c);
+                        }
+
+                        switch (character.TransformTo.ToLower())
+                        {
+                            case "peach":
+                                context.Characters.Add(new Peach(character.TransformTo, 100, 0));
+                                break;
+                            case "mario":
+                                context.Characters.Add(new Mario(character.TransformTo, 100, 0));
+                                break;
+                            case "luigi":
+                                context.Characters.Add(new Luigi(character.TransformTo, 100, 0));
+                                break;
+                        }
+                        Console.WriteLine($"{character.Name} --> {character.TransformTo}!\n");
+                        context.SaveChanges();
                     }
-                    Console.WriteLine($"{character.Name} --> {character.TransformTo}!\n");
                 }
             }
         }

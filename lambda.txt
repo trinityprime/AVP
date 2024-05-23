@@ -1,7 +1,0 @@
-eg. var f = (x => x + y)
-
-x = argument
-=> = anon func
-x + y = method body (what method would do)
-
-basically lambda is shortcut func

@@ -10,6 +10,7 @@ namespace MushroomPocket
         public int HP { get; set; }
         public int EXP { get; set; }
         public string Skill { get; set; }
+        public List<Item> Inventory { get; set; } = new List<Item>();
 
         public Character() { }
         public Character(string name, int hp, int exp, string skill)
@@ -56,6 +57,14 @@ namespace MushroomPocket
         public Mario() { }
         public Mario(string name, int hp, int exp) : base(name, hp, exp, "Combat Skills") { }
     }
+}
+
+public class Item
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Effect { get; set; }
+
 }
 
 public class MushroomMaster

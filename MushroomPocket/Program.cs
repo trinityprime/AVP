@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MushroomPocket.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace MushroomPocket
 {
@@ -25,13 +26,16 @@ namespace MushroomPocket
                 while (true)
                 {
                     Console.WriteLine("(1). Add Mushroom's Character to my pocket");
-                    Console.WriteLine("(2). List character(s) in my pocket");
-                    Console.WriteLine("(3). Update Mushroom Character's HP & XP");
-                    Console.WriteLine("(4). Delete Mushroom Character from my pocket");
-                    Console.WriteLine("(5). Check if I can transform my characters");
-                    Console.WriteLine("(6). Transform character(s)");
-                    Console.WriteLine("(7). Train character(s)");
-                    Console.WriteLine("Please only enter [1,2,3,4,5,6,7] or Q to quit: ");
+                    Console.WriteLine("(2). Add Item to my pocket");
+                    Console.WriteLine("(3). List character(s) in my pocket");
+                    Console.WriteLine("(4). List Item(s) in my pocket");
+                    Console.WriteLine("(5). Use item on a character");
+                    Console.WriteLine("(6). Update Mushroom Character's HP & XP");
+                    Console.WriteLine("(7). Delete Mushroom Character from my pocket");
+                    Console.WriteLine("(8). Check if I can transform my characters");
+                    Console.WriteLine("(9). Transform character(s)");
+                    Console.WriteLine("(10). Train character(s)");
+                    Console.WriteLine("Please only enter [1,2,3,4,5,6,7,8,9,10] or Q to quit: ");
                     string input = Console.ReadLine();
                     Console.WriteLine("---------------------");
 
@@ -41,21 +45,30 @@ namespace MushroomPocket
                             AddCharacter();
                             break;
                         case "2":
-                            ListCharacter();
+                            AddItem();
                             break;
                         case "3":
-                            UpdateCharacter();
+                            ListCharacter();
                             break;
                         case "4":
-                            DeleteCharacter();
+                            ListItems();
                             break;
                         case "5":
-                            CheckTransformation();
+                            UseItems();
                             break;
                         case "6":
-                            Transformation();
+                            UpdateCharacter();
                             break;
                         case "7":
+                            DeleteCharacter();
+                            break;
+                        case "8":
+                            CheckTransformation();
+                            break;
+                        case "9":
+                            Transformation();
+                            break;
+                        case "10":
                             TrainCharacter();
                             break;
                         case "Q":
@@ -102,16 +115,154 @@ namespace MushroomPocket
             }
         }
 
+        static void AddItem()
+        {
+            using (var context = new MushroomDatabase())
+            {
+                Console.WriteLine("Enter the item name:");
+                string itemName = Console.ReadLine();
+
+                string itemEffect;
+                while (true)
+                {
+                    Console.WriteLine("Enter the item effect (e.g., HP+10 or EXP+20):");
+                    itemEffect = Console.ReadLine();
+
+                    // Validation
+                    var effectParts = itemEffect.Split('+');
+                    if (effectParts.Length == 2 && int.TryParse(effectParts[1], out int value) && (effectParts[0].ToUpper() == "HP" || effectParts[0].ToUpper() == "EXP"))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid effect format. Please enter the effect in the format 'TYPE+VALUE' (e.g., HP+10 or EXP+20).");
+                    }
+                }
+
+                var item = new Item { Name = itemName, Effect = itemEffect };
+                context.Items.Add(item);
+                context.SaveChanges();
+
+                Console.WriteLine($"Item {itemName} added to the inventory.\n");
+            }
+        }
 
         static void ListCharacter()
         {
             using (var context = new MushroomDatabase())
             {
-                var sortedCharacters = context.Characters.OrderByDescending(c => c.HP).ToList();
-                foreach (var character in sortedCharacters)
+                var characters = context.Characters.ToList();
+                var sortedHP = context.Characters.OrderByDescending(c => c.HP);
+                if (characters.Count == 0)
+                {
+                    Console.WriteLine("No characters available.");
+                    return;
+                }
+                foreach (var character in sortedHP)
                 {
                     Console.WriteLine($"ID: {character.ID}\nName: {character.Name}\nHP: {character.HP}\nEXP: {character.EXP}\nSkill: {character.Skill}");
                     Console.WriteLine("---------------------");
+                }
+            }
+        }
+
+        static void ListItems()
+        {
+            using (var context = new MushroomDatabase())
+            {
+                var items = context.Items.ToList();
+                if (items.Count == 0)
+                {
+                    Console.WriteLine("No items available.");
+                    return;
+                }
+                foreach (var item in items)
+                {
+                    Console.WriteLine($"ID: {item.Id}\nName: {item.Name}\nEffect: {item.Effect}");
+                    Console.WriteLine("---------------------");
+                }
+            }
+        }
+
+        static void UseItems()
+        {
+            using (var context = new MushroomDatabase())
+            {
+                // List all characters
+                var characters = context.Characters.ToList();
+                if (characters.Count == 0)
+                {
+                    Console.WriteLine("No characters available.");
+                    return;
+                }
+
+                Console.WriteLine("Select a character by ID:");
+                foreach (var character in characters)
+                {
+                    Console.WriteLine($"ID: {character.ID}, Name: {character.Name}, HP: {character.HP}, EXP: {character.EXP}");
+                }
+                Console.WriteLine("---------------------");
+
+                int characterID;
+                while (!int.TryParse(Console.ReadLine(), out characterID) || !characters.Any(c => c.ID == characterID))
+                {
+                    Console.WriteLine("Invalid character ID. Please enter a valid character ID:");
+                }
+
+                var selectedCharacter = characters.First(c => c.ID == characterID);
+
+                // List all items
+                var items = context.Items.ToList();
+                if (items.Count == 0)
+                {
+                    Console.WriteLine("No items available.");
+                    return;
+                }
+
+                Console.WriteLine("Select an item by ID:");
+                foreach (var item in items)
+                {
+                    Console.WriteLine($"ID: {item.Id}, Name: {item.Name}, Effect: {item.Effect}");
+                }
+                Console.WriteLine("---------------------");
+
+                int itemID;
+                while (!int.TryParse(Console.ReadLine(), out itemID) || !items.Any(i => i.Id == itemID))
+                {
+                    Console.WriteLine("Invalid item ID. Please enter a valid item ID:");
+                }
+
+                var selectedItem = items.First(i => i.Id == itemID);
+
+                ApplyItemEffect(selectedCharacter, selectedItem);
+
+                context.Items.Remove(selectedItem);
+
+                context.SaveChanges();
+                Console.WriteLine($"Item {selectedItem.Name} used on {selectedCharacter.Name}.");
+            }
+        }
+
+        static void ApplyItemEffect(Character character, Item item)
+        {
+            // Parse the item effect
+            var effect = item.Effect.Split('+');
+            if (effect.Length == 2 && int.TryParse(effect[1], out int value))
+            {
+                switch (effect[0].ToUpper())
+                {
+                    case "HP":
+                        character.HP += value;
+                        Console.WriteLine($"{character.Name}'s HP increased by {value}. New HP: {character.HP}");
+                        break;
+                    case "EXP":
+                        character.EXP += value;
+                        Console.WriteLine($"{character.Name}'s EXP increased by {value}. New EXP: {character.EXP}");
+                        break;
+                    default:
+                        Console.WriteLine("Unknown effect type.");
+                        break;
                 }
             }
         }

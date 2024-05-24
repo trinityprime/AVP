@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MushroomPocket")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2656f4361f93ca41b9c65aea82c018ed56ee43fb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fb319b587b863224b3cc4fd64c3edf8865771e56")]
 [assembly: System.Reflection.AssemblyProductAttribute("MushroomPocket")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MushroomPocket")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MushroomPocket.EntityFrameworkCore;
 
@@ -10,9 +11,11 @@ using MushroomPocket.EntityFrameworkCore;
 namespace MushroomPocket.Migrations
 {
     [DbContext(typeof(MushroomDatabase))]
-    partial class MushroomDatabaseModelSnapshot : ModelSnapshot
+    [Migration("20240523104739_AddItemsTable")]
+    partial class AddItemsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.5");
@@ -37,6 +40,26 @@ namespace MushroomPocket.Migrations
                     b.HasIndex("CharacterID");
 
                     b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("MushroomMaster", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("NoToTransform")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TransformTo")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MushroomMasters");
                 });
 
             modelBuilder.Entity("MushroomPocket.Character", b =>
